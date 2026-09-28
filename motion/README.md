@@ -29,3 +29,16 @@ Compositions are registered in `src/Root.tsx`; `src/Intro.tsx` is the demo.
 - `.claude/hooks/setup-motion.sh` reinstalls ffmpeg, fonts and npm deps at session start.
 - Remotion can't download its own browser here, so `remotion.config.ts` points it at the pre-installed Playwright headless shell.
 - The render browser has no network proxy: use local fonts/assets (put files in `public/` and use `staticFile()`) instead of Google Fonts or remote URLs.
+
+## Nolina showreel
+
+`src/nolina/` is a 30s, seven-scene showreel for nolina-med.eu (the Nolina centre in Hisarya):
+kinetic type → 3D hot-stone stack → service cards → price-list UI → lymphatic-drainage visual → phone booking flow → logo reveal.
+
+```bash
+npx remotion render Nolina out/nolina-showreel.mp4 --crf=16
+```
+
+Copy, prices, hours and contact details come from the live site. The palette and the leaf logo mark are stand-ins,
+because the site couldn't be reached from the render environment. Replace `C` in `theme.ts` and the mark in `S7Logo.tsx`
+with the real brand assets.

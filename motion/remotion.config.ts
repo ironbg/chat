@@ -3,7 +3,7 @@ import { Config } from "@remotion/cli/config";
 
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
-Config.setChromiumOpenGlRenderer("angle");
+Config.setChromiumOpenGlRenderer("swangle") // software WebGL: no GPU in the container;
 
 // Remotion can't download its own headless browser here; use the pre-installed one.
 const pw = "/opt/pw-browsers";
