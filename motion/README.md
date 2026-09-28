@@ -32,13 +32,15 @@ Compositions are registered in `src/Root.tsx`; `src/Intro.tsx` is the demo.
 
 ## Nolina showreel
 
-`src/nolina/` is a 30s, seven-scene showreel for nolina-med.eu (the Nolina centre in Hisarya):
-kinetic type → 3D hot-stone stack → service cards → price-list UI → lymphatic-drainage visual → phone booking flow → logo reveal.
+`src/nolina/` is a 30s, eight-scene showreel for nolina-med.eu (the Nolina centre in Hisarya):
+kinetic type → 3D hot-stone stack with the homepage hero line → 3D photo dolly → service cards →
+price-list UI → lymphatic-drainage visual → phone booking flow → logo reveal.
 
 ```bash
 npx remotion render Nolina out/nolina-showreel.mp4 --crf=16
 ```
 
-Copy, prices, hours and contact details come from the live site. The palette and the leaf logo mark are stand-ins,
-because the site couldn't be reached from the render environment. Replace `C` in `theme.ts` and the mark in `S7Logo.tsx`
-with the real brand assets.
+Everything is taken from the live site: copy, prices, hours and contact details; the brand colours (Elementor globals
+`#2E3543`, `#AABE30`, `#D7E09E`, `#879B10` and the logo's orange `#E16501`); the Rubik font; the logo figure
+(site icon) and photos in `public/nolina/`. The wordmark and swoosh are rebuilt from the business card in the
+site's photo, since no vector logo is published.

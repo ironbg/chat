@@ -1,76 +1,115 @@
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { C, display, text } from "./theme";
 import { Label, Reveal, clamp, ease } from "./ui";
 
-const DAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-const SLOTS = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"];
+// The site books by phone, Viber or WhatsApp; this is the prefilled message from its WhatsApp link.
+const MESSAGE = "Здравейте, искам да запазя час за масаж.";
+const CHANNELS = ["Телефон", "Viber", "WhatsApp"];
 
 const Phone: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const day = frame > 38 ? 3 : -1;
-  const slot = frame > 62 ? 4 : -1;
-  const press = spring({ frame: frame - 86, fps, config: { damping: 9 } });
-  const done = spring({ frame: frame - 96, fps, config: { damping: 13 } });
-  const tap = (at: number) => {
-    const t = interpolate(frame, [at, at + 14], [0, 1], clamp);
-    return { scale: 0.4 + t * 1.6, opacity: t > 0 && t < 1 ? 1 - t : 0 };
-  };
+  const typed = Math.floor(interpolate(frame, [18, 56], [0, MESSAGE.length], clamp));
+  const sent = spring({ frame: frame - 62, fps, config: { damping: 14 } });
+  const read = frame > 80;
+  const hours = spring({ frame: frame - 86, fps, config: { damping: 14 } });
+  const send = spring({ frame: frame - 58, fps, config: { damping: 8 } });
   return (
-    <div style={{ width: 460, height: 940, borderRadius: 70, background: "#050b0a", padding: 16, boxShadow: "0 80px 140px rgba(0,0,0,0.55), inset 0 0 0 2px #2a3a36" }}>
-      <div style={{ width: "100%", height: "100%", borderRadius: 56, background: C.stone, overflow: "hidden", position: "relative", fontFamily: text }}>
-        <div style={{ position: "absolute", top: 16, left: "50%", marginLeft: -60, width: 120, height: 34, borderRadius: 17, background: "#050b0a" }} />
-        <div style={{ padding: "80px 32px 0" }}>
-          <div style={{ fontSize: 18, letterSpacing: "0.25em", color: C.moss, fontWeight: 700 }}>NOLINA</div>
-          <div style={{ fontFamily: display, fontSize: 46, fontWeight: 800, letterSpacing: "-0.03em", color: C.ink, marginTop: 6 }}>Запазете час</div>
-          <div style={{ marginTop: 22, padding: "18px 20px", borderRadius: 18, background: "#fff", display: "flex", justifyContent: "space-between", fontSize: 21, fontWeight: 600, color: C.ink }}>
-            <span>Цялостен масаж</span>
-            <span style={{ color: C.teal }}>60 мин · 35 €</span>
+    <div style={{ width: 460, height: 940, borderRadius: 70, background: "#0b0e13", padding: 16, boxShadow: "0 80px 140px rgba(0,0,0,0.55), inset 0 0 0 2px #3d4556" }}>
+      <div style={{ width: "100%", height: "100%", borderRadius: 56, background: "#eef0e6", overflow: "hidden", position: "relative", fontFamily: text }}>
+        <div style={{ background: C.slate, padding: "70px 26px 22px", display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 64, height: 64, borderRadius: 32, background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Img src={staticFile("nolina/figure.png")} style={{ width: 50 }} />
           </div>
-          <div style={{ marginTop: 26, fontSize: 18, fontWeight: 700, color: C.moss, letterSpacing: "0.1em" }}>ДЕН</div>
-          <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-            {DAYS.map((d, i) => (
-              <div key={d} style={{ flex: 1, height: 84, borderRadius: 16, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: i === day ? C.forest : "#fff", color: i === day ? C.stone : C.ink, fontWeight: 700, fontSize: 18, gap: 4, transform: `scale(${i === day ? 1.06 : 1})` }}>
-                <span style={{ opacity: 0.6, fontSize: 15 }}>{d}</span>
-                <span style={{ fontSize: 26 }}>{12 + i}</span>
-              </div>
-            ))}
-          </div>
-          <div style={{ marginTop: 26, fontSize: 18, fontWeight: 700, color: C.moss, letterSpacing: "0.1em" }}>ЧАС</div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginTop: 12 }}>
-            {SLOTS.map((s, i) => {
-              const a = ease(frame, 44 + i * 2, 14);
-              return (
-                <div key={s} style={{ height: 58, borderRadius: 14, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 19, background: i === slot ? C.teal : "#fff", color: i === slot ? C.deep : C.ink, opacity: a, transform: `translateY(${(1 - a) * 20}px)` }}>
-                  {s}
-                </div>
-              );
-            })}
-          </div>
-          <div style={{ marginTop: 34, height: 84, borderRadius: 42, background: C.forest, color: C.stone, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 700, transform: `scale(${1 - Math.sin(press * Math.PI) * 0.06})` }}>
-            Запази час →
+          <div>
+            <div style={{ color: C.paper, fontSize: 26, fontWeight: 600 }}>Нолина</div>
+            <div style={{ color: C.lime, fontSize: 17 }}>+359 883 30 55 56</div>
           </div>
         </div>
-        {/* tap ripples */}
-        {[
-          { at: 34, x: 32 + 3 * 66 + 30, y: 400 },
-          { at: 58, x: 32 + 30, y: 590 },
-          { at: 82, x: 214, y: 740 },
-        ].map((t, i) => {
-          const r = tap(t.at);
-          return <div key={i} style={{ position: "absolute", left: t.x - 40, top: t.y - 40, width: 80, height: 80, borderRadius: 40, background: C.teal, opacity: r.opacity * 0.5, transform: `scale(${r.scale})` }} />;
-        })}
-        {/* confirmation sheet */}
-        <div style={{ position: "absolute", inset: 0, background: C.forest, transform: `translateY(${(1 - done) * 100}%)`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 26 }}>
-          <div style={{ width: 150, height: 150, borderRadius: 75, background: C.teal, display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${done})` }}>
-            <svg width={80} height={80} viewBox="0 0 24 24">
-              <path d="M4 12.5 L10 18 L20 6" fill="none" stroke={C.deep} strokeWidth={3} strokeLinecap="round" strokeDasharray={30} strokeDashoffset={30 * (1 - ease(frame, 104, 16))} />
+        <div style={{ position: "absolute", top: 16, left: "50%", marginLeft: -60, width: 120, height: 34, borderRadius: 17, background: "#0b0e13" }} />
+        {/* sent bubble */}
+        <div
+          style={{
+            position: "absolute",
+            right: 22,
+            top: 200,
+            maxWidth: 330,
+            padding: "18px 22px 14px",
+            borderRadius: "24px 24px 6px 24px",
+            background: C.limeSoft,
+            color: C.ink,
+            fontSize: 24,
+            lineHeight: 1.35,
+            transform: `translateY(${(1 - sent) * 560}px) scale(${0.6 + sent * 0.4})`,
+            transformOrigin: "right bottom",
+            opacity: sent,
+          }}
+        >
+          {MESSAGE}
+          <div style={{ textAlign: "right", fontSize: 16, marginTop: 6, color: read ? C.limeDark : C.grey, fontWeight: 700 }}>10:05 ✓✓</div>
+        </div>
+        {/* info card */}
+        <div
+          style={{
+            position: "absolute",
+            left: 22,
+            right: 22,
+            top: 380,
+            padding: 24,
+            borderRadius: 24,
+            background: "#fff",
+            boxShadow: "0 20px 40px rgba(35,43,56,0.12)",
+            opacity: hours,
+            transform: `translateY(${(1 - hours) * 40}px)`,
+          }}
+        >
+          <div style={{ fontSize: 16, letterSpacing: "0.16em", fontWeight: 700, color: C.limeDark }}>РАБОТНО ВРЕМЕ</div>
+          <div style={{ fontSize: 26, fontWeight: 600, color: C.ink, marginTop: 8 }}>Понеделник – Събота</div>
+          <div style={{ fontFamily: display, fontSize: 48, fontWeight: 800, color: C.ink }}>10:00 – 18:00</div>
+          <div style={{ fontSize: 19, color: C.grey, marginTop: 8 }}>гр. Хисаря, ул. „Деветте деца на Еани“ 2</div>
+        </div>
+        {/* input bar */}
+        <div style={{ position: "absolute", left: 18, right: 18, bottom: 30, display: "flex", gap: 12, alignItems: "flex-end" }}>
+          <div style={{ flex: 1, minHeight: 64, borderRadius: 32, background: "#fff", padding: "16px 22px", fontSize: 22, lineHeight: 1.35, color: C.ink, boxSizing: "border-box" }}>
+            {frame < 62 ? (
+              <>
+                {MESSAGE.slice(0, typed)}
+                <span style={{ opacity: Math.floor(frame / 8) % 2 ? 1 : 0, color: C.limeDark }}>|</span>
+              </>
+            ) : (
+              <span style={{ color: C.grey }}>Съобщение</span>
+            )}
+          </div>
+          <div style={{ width: 64, height: 64, borderRadius: 32, background: C.lime, display: "flex", alignItems: "center", justifyContent: "center", transform: `scale(${1 - Math.sin(Math.min(1, send) * Math.PI) * 0.2})` }}>
+            <svg width={30} height={30} viewBox="0 0 24 24">
+              <path d="M3 11 L21 3 L14 21 L11 13 Z" fill={C.ink} />
             </svg>
           </div>
-          <div style={{ fontFamily: display, fontSize: 44, fontWeight: 800, color: C.stone }}>Часът е запазен</div>
-          <div style={{ fontSize: 24, color: C.sage }}>Чт · 14:00 · Цялостен масаж</div>
         </div>
       </div>
+    </div>
+  );
+};
+
+const VoucherBadge: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const s = spring({ frame: frame - 40, fps, config: { damping: 10 } });
+  const label = "ПОДАРЪЧЕН ВАУЧЕР • ПОДАРИ ЗДРАВЕ • ";
+  return (
+    <div style={{ position: "absolute", right: 660, top: 130, width: 220, height: 220, transform: `scale(${s}) rotate(${frame * 0.8}deg)` }}>
+      <svg viewBox="0 0 220 220" width={220} height={220}>
+        <defs>
+          <path id="badge" d="M110 110 m -84 0 a 84 84 0 1 1 168 0 a 84 84 0 1 1 -168 0" />
+        </defs>
+        <circle cx={110} cy={110} r={108} fill={C.orange} />
+        <text fontFamily={text} fontSize={17} fontWeight={700} letterSpacing={2.6} fill="#fff">
+          <textPath href="#badge">{label}</textPath>
+        </text>
+        <text x={110} y={126} textAnchor="middle" fontFamily={display} fontSize={48} fontWeight={800} fill="#fff" transform={`rotate(${-frame * 0.8} 110 110)`}>
+          🎁
+        </text>
+      </svg>
     </div>
   );
 };
@@ -79,27 +118,29 @@ export const S6Booking: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const inn = spring({ frame, fps, config: { damping: 18 } });
-  const ry = interpolate(frame, [0, 150], [-34, -12], clamp) + (1 - inn) * -40;
+  const ry = interpolate(frame, [0, 120], [-30, -10], clamp) + (1 - inn) * -40;
   return (
-    <AbsoluteFill style={{ background: `linear-gradient(120deg, ${C.deep}, ${C.forest})`, flexDirection: "row", alignItems: "center", padding: "0 180px", gap: 140 }}>
+    <AbsoluteFill style={{ background: `linear-gradient(120deg, ${C.night}, ${C.slate})`, flexDirection: "row", alignItems: "center", padding: "0 180px", gap: 140 }}>
       <div style={{ flex: 1 }}>
-        <Label>Онлайн записване</Label>
-        {["Вашият час.", "Един клик."].map((l, i) => (
-          <Reveal key={l} delay={6 + i * 7}>
-            <div style={{ fontFamily: display, fontWeight: 900, fontSize: 140, letterSpacing: "-0.05em", lineHeight: 1.02, color: i ? C.sage : C.stone }}>{l}</div>
+        <Label>Запази час с:</Label>
+        {["Запази", "час сега."].map((l, i) => (
+          <Reveal key={l} delay={4 + i * 6}>
+            <div style={{ fontFamily: display, fontWeight: 800, fontSize: 150, letterSpacing: "-0.04em", lineHeight: 1.02, color: i ? C.lime : C.paper }}>{l}</div>
           </Reveal>
         ))}
-        <div style={{ display: "flex", gap: 60, marginTop: 50, fontFamily: text, color: C.stone, opacity: ease(frame, 30, 20) }}>
-          <div>
-            <div style={{ fontSize: 20, letterSpacing: "0.2em", color: C.sage, fontWeight: 600 }}>ПОН – СЪБ</div>
-            <div style={{ fontFamily: display, fontSize: 52, fontWeight: 800, marginTop: 6 }}>10:00 – 18:00</div>
-          </div>
-          <div>
-            <div style={{ fontSize: 20, letterSpacing: "0.2em", color: C.sage, fontWeight: 600 }}>ТЕЛЕФОН</div>
-            <div style={{ fontFamily: display, fontSize: 52, fontWeight: 800, marginTop: 6 }}>0883 30 55 56</div>
-          </div>
+        <div style={{ display: "flex", gap: 16, marginTop: 44 }}>
+          {CHANNELS.map((c, i) => {
+            const a = ease(frame, 18 + i * 6, 16);
+            return (
+              <div key={c} style={{ fontFamily: text, fontSize: 28, fontWeight: 600, padding: "14px 30px", borderRadius: 40, border: `2px solid ${C.lime}`, color: C.paper, opacity: a, transform: `translateY(${(1 - a) * 30}px)` }}>
+                {c}
+              </div>
+            );
+          })}
         </div>
+        <div style={{ fontFamily: display, fontSize: 64, fontWeight: 700, color: C.paper, marginTop: 40, opacity: ease(frame, 34, 20) }}>+359 883 30 55 56</div>
       </div>
+      <VoucherBadge />
       <div style={{ perspective: 2400 }}>
         <div style={{ transform: `rotateY(${ry}deg) rotateX(6deg) translateY(${(1 - inn) * 400}px)`, transformStyle: "preserve-3d" }}>
           <Phone />

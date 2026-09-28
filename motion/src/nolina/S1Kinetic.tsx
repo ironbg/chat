@@ -4,9 +4,9 @@ import { clamp } from "./ui";
 
 // Real service line from the site: "Масаж, кинезитерапия, рехабилитация".
 const WORDS = [
-  { w: "МАСАЖ", bg: C.stone, fg: C.ink },
-  { w: "КИНЕЗИТЕРАПИЯ", bg: C.forest, fg: C.stone },
-  { w: "РЕХАБИЛИТАЦИЯ", bg: C.teal, fg: C.deep },
+  { w: "МАСАЖ", bg: C.paper, fg: C.ink },
+  { w: "КИНЕЗИТЕРАПИЯ", bg: C.slate, fg: C.paper },
+  { w: "РЕХАБИЛИТАЦИЯ", bg: C.lime, fg: C.night },
 ];
 const PER = 24;
 
@@ -20,7 +20,7 @@ export const S1Kinetic: React.FC = () => {
     const f = frame - WORDS.length * PER;
     const s = spring({ frame: f, fps, config: { damping: 11, stiffness: 180 } });
     return (
-      <AbsoluteFill style={{ background: C.deep, justifyContent: "center", alignItems: "center" }}>
+      <AbsoluteFill style={{ background: C.night, justifyContent: "center", alignItems: "center" }}>
         {[3, 2, 1].map((k) => (
           <div
             key={k}
@@ -31,7 +31,7 @@ export const S1Kinetic: React.FC = () => {
               fontSize: 300,
               letterSpacing: "-0.04em",
               color: "transparent",
-              WebkitTextStroke: `2px ${C.sage}`,
+              WebkitTextStroke: `2px ${C.lime}`,
               opacity: 0.5 / k,
               transform: `scale(${1 + k * 0.14 * s}) translateY(${k * 6}px)`,
             }}
@@ -45,7 +45,7 @@ export const S1Kinetic: React.FC = () => {
             fontWeight: 900,
             fontSize: 300,
             letterSpacing: "-0.04em",
-            color: C.stone,
+            color: C.paper,
             transform: `scale(${interpolate(s, [0, 1], [2.2, 1])})`,
             opacity: s,
           }}
@@ -59,7 +59,7 @@ export const S1Kinetic: React.FC = () => {
   const { w, bg, fg } = WORDS[idx];
   const f = frame - idx * PER;
   const s = spring({ frame: f, fps, config: { damping: 14, stiffness: 220 } });
-  const size = Math.min(300, 1760 / (w.length * 0.66));
+  const size = Math.min(300, 1640 / (w.length * 0.8));
   const skew = interpolate(s, [0, 1], [-18, 0]);
   const x = interpolate(s, [0, 1], [idx % 2 ? -600 : 600, 0]);
   const bar = interpolate(f, [0, PER], [0, 1], clamp);

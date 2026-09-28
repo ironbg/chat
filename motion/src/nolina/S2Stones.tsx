@@ -8,7 +8,7 @@ const STONES = [
   { r: 1.35, c: "#1f2422" },
   { r: 1.1, c: "#2d3330" },
   { r: 0.9, c: "#3b3f3a" },
-  { r: 0.72, c: C.sand },
+  { r: 0.72, c: C.limeSoft },
   { r: 0.52, c: "#232826" },
 ];
 const H = 0.36;
@@ -28,8 +28,8 @@ const Scene: React.FC = () => {
     <>
       <ambientLight intensity={0.35} />
       <directionalLight position={[4, 9, 6]} intensity={3} color="#fff1dc" />
-      <pointLight position={[-5, 2, 3]} intensity={60} color={C.teal} />
-      <pointLight position={[4, 1, -4]} intensity={40} color={C.gold} />
+      <pointLight position={[-5, 2, 3]} intensity={60} color={C.lime} />
+      <pointLight position={[4, 1, -4]} intensity={40} color={C.orange} />
       <group position={[2.6, -1.6, 0]} rotation={[0.12, frame * 0.012 - 0.4, 0]}>
         {STONES.map((s, i) => {
           const d = spring({ frame: frame - i * 9, fps, config: { damping: 13, mass: 0.9 } });
@@ -49,7 +49,7 @@ const Scene: React.FC = () => {
         {/* water surface */}
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}>
           <circleGeometry args={[6, 96]} />
-          <meshStandardMaterial color={C.forest} roughness={0.12} metalness={0.6} />
+          <meshStandardMaterial color={C.slate} roughness={0.12} metalness={0.6} />
         </mesh>
         {[0, 1, 2].map((k) => {
           const t = ((ripple - k * 14) % 60) / 60;
@@ -57,7 +57,7 @@ const Scene: React.FC = () => {
           return (
             <mesh key={k} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
               <ringGeometry args={[1.4 + t * 4, 1.44 + t * 4, 128]} />
-              <meshBasicMaterial color={C.teal} transparent opacity={(1 - t) * 0.7} />
+              <meshBasicMaterial color={C.lime} transparent opacity={(1 - t) * 0.7} />
             </mesh>
           );
         })}
@@ -71,7 +71,7 @@ const Scene: React.FC = () => {
               position={[Math.cos(a) * rad, 0.3 + random(`y${i}`) * 3.5 + Math.sin(frame * 0.05 + i) * 0.15, Math.sin(a) * rad]}
             >
               <sphereGeometry args={[0.03 + random(`s${i}`) * 0.04, 12, 12]} />
-              <meshBasicMaterial color={i % 3 ? C.sage : C.gold} />
+              <meshBasicMaterial color={i % 3 ? C.lime : C.orange} />
             </mesh>
           );
         })}
@@ -83,18 +83,19 @@ const Scene: React.FC = () => {
 export const S2Stones: React.FC = () => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
-  const zoom = interpolate(frame, [0, 150], [1.08, 1], clamp);
+  const zoom = interpolate(frame, [0, 135], [1.08, 1], clamp);
   return (
-    <AbsoluteFill style={{ background: `radial-gradient(circle at 70% 55%, ${C.moss} 0%, ${C.deep} 65%)` }}>
+    <AbsoluteFill style={{ background: `radial-gradient(circle at 70% 55%, ${C.steel} 0%, ${C.night} 70%)` }}>
       <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
         <ThreeCanvas width={width} height={height} camera={{ fov: 34, position: [0, 2.2, 10] }}>
           <Scene />
         </ThreeCanvas>
       </AbsoluteFill>
       <AbsoluteFill style={{ padding: "0 160px", justifyContent: "center" }}>
-        <Label delay={6}>Лечебно-възстановителен център</Label>
+        <Label delay={6}>Твоят спокоен оазис за всеки ден!</Label>
         <div style={{ height: 36 }} />
-        {["Лечебни", "и релаксиращи", "масажи."].map((l, i) => (
+        {/* Hero line from the homepage */}
+        {["Вземи", "здравето си", "в свои ръце!"].map((l, i) => (
           <Reveal key={l} delay={12 + i * 6}>
             <div
               style={{
@@ -104,7 +105,7 @@ export const S2Stones: React.FC = () => {
                 fontSize: 128,
                 lineHeight: 1.02,
                 letterSpacing: "-0.035em",
-                color: i === 2 ? C.sage : C.stone,
+                color: i === 2 ? C.lime : C.paper,
               }}
             >
               {l}

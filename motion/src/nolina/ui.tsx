@@ -25,7 +25,7 @@ export const Reveal: React.FC<{ delay?: number; dur?: number; children: React.Re
 
 export const Label: React.FC<{ children: React.ReactNode; color?: string; delay?: number }> = ({
   children,
-  color = C.sage,
+  color = C.lime,
   delay = 0,
 }) => {
   const p = ease(useCurrentFrame(), delay, 20);
@@ -81,7 +81,7 @@ export const Hud: React.FC = () => {
     position: "absolute",
     width: 34,
     height: 34,
-    borderColor: "rgba(241,235,224,0.55)",
+    borderColor: "rgba(248,248,248,0.55)",
     borderStyle: "solid",
     borderWidth: 0,
     transform: `rotate(${r}deg)`,
@@ -94,7 +94,7 @@ export const Hud: React.FC = () => {
     fontSize: 17,
     fontWeight: 500,
     letterSpacing: "0.2em",
-    color: "rgba(241,235,224,0.7)",
+    color: "rgba(248,248,248,0.7)",
     fontVariantNumeric: "tabular-nums",
   };
   return (
@@ -103,7 +103,7 @@ export const Hud: React.FC = () => {
       <div style={{ ...corner(90), right: 40, top: 40 }} />
       <div style={{ ...corner(180), right: 40, bottom: 40 }} />
       <div style={{ ...corner(270), left: 40, bottom: 40 }} />
-      <div style={{ ...t, left: 92, top: 48 }}>NOLINA — ХИСАРЯ</div>
+      <div style={{ ...t, left: 92, top: 48 }}>НОЛИНА — ХИСАРЯ</div>
       <div style={{ ...t, right: 92, top: 48 }}>● REC {tc}</div>
       <div style={{ ...t, left: 92, bottom: 48 }}>NOLINA-MED.EU</div>
       <div style={{ ...t, right: 92, bottom: 48 }}>SHOWREEL / 2026</div>
@@ -111,7 +111,7 @@ export const Hud: React.FC = () => {
   );
 };
 
-export const Dust: React.FC<{ count?: number; color?: string }> = ({ count = 40, color = C.sage }) => {
+export const Dust: React.FC<{ count?: number; color?: string }> = ({ count = 40, color = C.lime }) => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
